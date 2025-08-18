@@ -1,5 +1,6 @@
 package com.java.components.lang;
 
+// Creating for ASimplerUser & AOtherUser
 public class CharArrayBuilder {
 	private char[] oldArray;
 	private char[] array;
@@ -7,7 +8,10 @@ public class CharArrayBuilder {
 
 	private OnAppendedChangedListener onAppendedChangedListener;
 
-	public CharArrayBuilder(char[] text, int offset) {
+	public CharArrayBuilder(
+			char[] text,
+			int offset
+	) {
 		if (offset <= -1 || offset >= text.length) throw new IllegalArgumentException("Offset not valid: " + offset);
 
 		this.array = new char[text.length - offset];
@@ -15,6 +19,11 @@ public class CharArrayBuilder {
 		System.arraycopy(text, offset, this.array, 0, this.array.length);
 
 		this.size = this.array.length;
+	}
+
+	public CharArrayBuilder() {
+		this.array = new char[0];
+		this.size = 0;
 	}
 
 	public void expandCapacity(
@@ -98,7 +107,70 @@ public class CharArrayBuilder {
 		return this;
 	}
 
-	public CharArrayBuilder setOnAppendedChangedListener(OnAppendedChangedListener onAppendedChangedListener) {
+	public CharArrayBuilder append(
+			Number text
+	) {
+		String subText = String.valueOf(text);
+		this.oldArray = this.array;
+
+		this.size = this.size + subText.length();
+		if (this.size > this.array.length) {
+			expandCapacity(subText.length());
+		}
+		subText.getChars(0, subText.length(), this.array, this.size - subText.length());
+
+		if (onAppendedChangedListener != null) onAppendedChangedListener.onAppendChanged(this.oldArray, this.array, subText.toCharArray());
+
+		return this;
+	}
+
+	public CharArrayBuilder append(
+			byte text
+	) {
+		return this.append((Number) text);
+	}
+
+	public CharArrayBuilder append(
+			short text
+	) {
+		return this.append((Number) text);
+	}
+
+	public CharArrayBuilder append(
+			int text
+	) {
+		return this.append((Number) text);
+	}
+
+	public CharArrayBuilder append(
+			long text
+	) {
+		return this.append((Number) text);
+	}
+
+	public CharArrayBuilder append(
+			float text
+	) {
+		return this.append((Number) text);
+	}
+
+	public CharArrayBuilder append(
+			double text
+	) {
+		return this.append((Number) text);
+	}
+
+	public static abstract class OnAppendedChangedListener {
+		public abstract void onAppendChanged(
+				char[] oldChar,
+				char[] newChar,
+				char[] insert
+		);
+	}
+
+	public CharArrayBuilder setOnAppendedChangedListener(
+			OnAppendedChangedListener onAppendedChangedListener
+	) {
 		this.onAppendedChangedListener = onAppendedChangedListener;
 		return this;
 	}
@@ -107,9 +179,7 @@ public class CharArrayBuilder {
 		return onAppendedChangedListener;
 	}
 
-	public static abstract class OnAppendedChangedListener {
-		public abstract void onAppendChanged(char[] oldChar, char[] newChar, char[] insert);
-	}
+
 
 	public int getSize() {
 		return size;
@@ -119,7 +189,7 @@ public class CharArrayBuilder {
 		return this.array.length;
 	}
 
-	public int getMissingCapacity() {
+	public int getCapacity() {
 		return this.array.length - this.size;
 	}
 
