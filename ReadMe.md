@@ -1,5 +1,5 @@
-<h1 style="text-align: center">Welcome to Java Components</h1>
+# Welcome to **Java Components**
 
-Este repositorio fue creado para que puedar tener algunas opciones extras que el Java nativo no tiene.
+This repository was created to offer additional features and options that are not available in standard Java.
 
-asi mismo, que se agrega elementos que se puede agregar al nativo, pero no se puede.
+It also provides enhancements and elements that could theoretically be part of native Java but are not supported, giving developers more flexibility and convenience in their projects.

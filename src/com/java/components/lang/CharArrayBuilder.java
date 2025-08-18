@@ -1,176 +1,141 @@
 package com.java.components.lang;
 
-// Creating for ASimplerUser & AOtherUser
+import java.util.Arrays;
+
+/*
+ * Created by: ASimplerUser, TheCreator & AOtherUser
+ */
 public class CharArrayBuilder {
-	private char[] oldArray;
-	private char[] array;
+	// -------------------- Field : Started -------------------- \\
+
+	private char[] buffer;
 	private int size;
 
 	private OnAppendedChangedListener onAppendedChangedListener;
+	private OnAppendedListener onAppendedListener;
+	private OnAppendedWatcherListener onAppendedWatcherListener;
+
+	// -------------------- Field : Ended -------------------- \\
+
+	// -------------------- Constructor : Started -------------------- \\
 
 	public CharArrayBuilder(
-			char[] text,
+			char[] target,
+			int offset,
+			int preCapacity
+	) {
+		if (offset < 0 || offset >= target.length) throw new IllegalArgumentException("Index of bound: " + offset);
+
+		this.buffer = new char[target.length - offset + preCapacity];
+
+		System.arraycopy(target, offset, this.buffer, 0, target.length - offset);
+	}
+
+	public CharArrayBuilder(
+			char[] target,
 			int offset
 	) {
-		if (offset <= -1 || offset >= text.length) throw new IllegalArgumentException("Offset not valid: " + offset);
+		this.buffer = new char[target.length - offset];
 
-		this.array = new char[text.length - offset];
+		System.arraycopy(target, offset, this.buffer, 0, this.buffer.length);
+	}
 
-		System.arraycopy(text, offset, this.array, 0, this.array.length);
+	public CharArrayBuilder(
+			char[] target
+	) {
+		this.buffer = new char[target.length];
 
-		this.size = this.array.length;
+		System.arraycopy(target, 0, this.buffer, 0, this.buffer.length);
+	}
+
+	public CharArrayBuilder(
+			int preCapacity
+	) {
+		this.buffer = new char[preCapacity];
 	}
 
 	public CharArrayBuilder() {
-		this.array = new char[0];
-		this.size = 0;
+		this.buffer = new char[0];
 	}
 
-	public void expandCapacity(
-			int newCapacity
-	) {
-		int newCap = Math.max((int)(this.array.length * 1.5), this.array.length + newCapacity);
-		char[] temporally = new char[newCap];
-		System.arraycopy(this.array, 0, temporally, 0, this.size - newCapacity);
-		this.array = temporally;
-	}
+	// -------------------- Constructor : Ended -------------------- \\
 
-	public CharArrayBuilder append(
-			char[] text
-	) {
-		this.oldArray = this.array;
+	// -------------------- Functions : Started -------------------- \\
 
-		this.size = this.size + text.length;
+	public CharArrayBuilder append(char[] text) {
+		if (text == null || text.length == 0) return this;
 
-		if (this.size >= this.array.length) expandCapacity(text.length);
-
-		System.arraycopy(text, 0, this.array, this.size - text.length, text.length);
-
-		if (onAppendedChangedListener != null) onAppendedChangedListener.onAppendChanged(this.oldArray, this.array, text);
-
-		return this;
-	}
-
-	public CharArrayBuilder append(boolean text) {
-		this.oldArray = this.array;
-
-		if (text) {
-			this.size = this.size + 4;
-			if (this.size >= this.array.length) expandCapacity(4);
-			this.array[this.size - 4] = 't';
-			this.array[this.size - 3] = 'r';
-			this.array[this.size - 2] = 'u';
+		char[] newBuffer;
+		if (this.size + text.length >= this.buffer.length) {
+			newBuffer = new char[Math.max(buffer.length * 2, size + text.length)];
 		} else {
-			this.size = this.size + 5;
-			if (this.size >= this.array.length) expandCapacity(5);
-			this.array[this.size - 5] = 'f';
-			this.array[this.size - 4] = 'a';
-			this.array[this.size - 3] = 'l';
-			this.array[this.size - 2] = 's';
+			newBuffer = new char[this.buffer.length];
 		}
-		this.array[this.size - 1] = 'e';
+		System.arraycopy(this.buffer, 0, newBuffer, 0, this.size);
+		System.arraycopy(text, 0, newBuffer, this.size, text.length);
 
-		if (onAppendedChangedListener != null) onAppendedChangedListener.onAppendChanged(this.oldArray, this.array, text ? new char[] { 't', 'r', 'u', 'e' } : new char[] { 'f', 'a', 'l', 's', 'e' });
-
-		return this;
-	}
-
-	public CharArrayBuilder append(
-			char text
-	) {
-		this.oldArray = this.array;
-
-		this.size = this.size + 1;
-
-		if (this.size >= this.array.length) expandCapacity(1);
-
-		this.array[this.size - 1] = text;
-
-		if (onAppendedChangedListener != null) onAppendedChangedListener.onAppendChanged(this.oldArray, this.array, new char[] { text });
-
-		return this;
-	}
-
-	public CharArrayBuilder append(
-			String text
-	) {
-		this.oldArray = this.array;
-
-		this.size = this.size + text.length();
-		if (this.size > this.array.length) {
-			expandCapacity(text.length());
+		if (onAppendedChangedListener != null) {
+			if (!onAppendedChangedListener.onAppendedChanged(this.buffer, this.size, newBuffer, this.size + newBuffer.length, text)) {
+				return this;
+			}
 		}
-		text.getChars(0, text.length(), this.array, this.size - text.length());
 
-		if (onAppendedChangedListener != null) onAppendedChangedListener.onAppendChanged(this.oldArray, this.array, text.toCharArray());
+		if (onAppendedListener != null) {
+			char[] target = onAppendedListener.onAppended(this.buffer, this.size, newBuffer, this.size + newBuffer.length, text);
 
-		return this;
-	}
-
-	public CharArrayBuilder append(
-			Number text
-	) {
-		String subText = String.valueOf(text);
-		this.oldArray = this.array;
-
-		this.size = this.size + subText.length();
-		if (this.size > this.array.length) {
-			expandCapacity(subText.length());
+			if (target != null) {
+				newBuffer = target;
+			}
 		}
-		subText.getChars(0, subText.length(), this.array, this.size - subText.length());
 
-		if (onAppendedChangedListener != null) onAppendedChangedListener.onAppendChanged(this.oldArray, this.array, subText.toCharArray());
+		if (onAppendedWatcherListener != null) {
+			onAppendedWatcherListener.onAppendedWatcher(this.buffer, this.size, newBuffer, this.size + newBuffer.length, text);
+		}
+
+		this.buffer = newBuffer;
+		this.size = newBuffer.length;
 
 		return this;
 	}
 
-	public CharArrayBuilder append(
-			byte text
-	) {
-		return this.append((Number) text);
+	public CharArrayBuilder append(String text) {
+		char[] subText = text.toCharArray();
+		if (subText == null || subText.length == 0) return this;
+
+		char[] newBuffer;
+		if (this.size + subText.length >= this.buffer.length) {
+			newBuffer = new char[Math.max(buffer.length * 2, size + subText.length)];
+		} else {
+			newBuffer = new char[this.buffer.length];
+		}
+		System.arraycopy(this.buffer, 0, newBuffer, 0, this.size);
+		System.arraycopy(subText, 0, newBuffer, this.size, subText.length);
+
+		if (onAppendedChangedListener != null) {
+			if (!onAppendedChangedListener.onAppendedChanged(this.buffer, this.size, newBuffer, this.size + newBuffer.length, subText)) {
+				return this;
+			}
+		}
+
+		if (onAppendedListener != null) {
+			char[] target = onAppendedListener.onAppended(this.buffer, this.size, newBuffer, this.size + newBuffer.length, subText);
+
+			if (target != null) {
+				newBuffer = target;
+			}
+		}
+
+		if (onAppendedWatcherListener != null) {
+			onAppendedWatcherListener.onAppendedWatcher(this.buffer, this.size, newBuffer, this.size + newBuffer.length, subText);
+		}
+
+		this.buffer = newBuffer;
+		this.size = newBuffer.length;
+
+		return this;
 	}
 
-	public CharArrayBuilder append(
-			short text
-	) {
-		return this.append((Number) text);
-	}
-
-	public CharArrayBuilder append(
-			int text
-	) {
-		return this.append((Number) text);
-	}
-
-	public CharArrayBuilder append(
-			long text
-	) {
-		return this.append((Number) text);
-	}
-
-	public CharArrayBuilder append(
-			float text
-	) {
-		return this.append((Number) text);
-	}
-
-	public CharArrayBuilder append(
-			double text
-	) {
-		return this.append((Number) text);
-	}
-
-	public static abstract class OnAppendedChangedListener {
-		public abstract void onAppendChanged(
-				char[] oldChar,
-				char[] newChar,
-				char[] insert
-		);
-	}
-
-	public CharArrayBuilder setOnAppendedChangedListener(
-			OnAppendedChangedListener onAppendedChangedListener
-	) {
+	public CharArrayBuilder setOnAppendedChangedListener(OnAppendedChangedListener onAppendedChangedListener) {
 		this.onAppendedChangedListener = onAppendedChangedListener;
 		return this;
 	}
@@ -179,22 +144,44 @@ public class CharArrayBuilder {
 		return onAppendedChangedListener;
 	}
 
-
-
-	public int getSize() {
-		return size;
+	public CharArrayBuilder setOnAppendedListener(OnAppendedListener onAppendedListener) {
+		this.onAppendedListener = onAppendedListener;
+		return this;
 	}
 
-	public int getLength() {
-		return this.array.length;
+	public OnAppendedListener getOnAppendedListener() {
+		return onAppendedListener;
 	}
 
-	public int getCapacity() {
-		return this.array.length - this.size;
+	public CharArrayBuilder setOnAppendedWatcherListener(OnAppendedWatcherListener onAppendedWatcherListener) {
+		this.onAppendedWatcherListener = onAppendedWatcherListener;
+		return this;
+	}
+
+	public OnAppendedWatcherListener getOnAppendedWatcherListener() {
+		return onAppendedWatcherListener;
 	}
 
 	@Override
 	public String toString() {
-		return new String(this.array, 0, this.size);
+		return new String(buffer, 0, this.size);
 	}
+
+	// -------------------- Functions : Ended -------------------- \\
+
+	// -------------------- Class : Start -------------------- \\
+
+	public static abstract class OnAppendedChangedListener {
+		public abstract boolean onAppendedChanged(char[] old, int oldSize, char[] current, int currentSize, char[] insert);
+	}
+
+	public static abstract class OnAppendedListener {
+		public abstract char[] onAppended(char[] old, int oldSize, char[] current, int currentSize, char[] insert);
+	}
+
+	public static abstract class OnAppendedWatcherListener {
+		public abstract void onAppendedWatcher(char[] old, int oldSize, char[] current, int currentSize, char[] insert);
+	}
+
+	// -------------------- Class : Ended -------------------- \\
 }

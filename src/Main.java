@@ -1,10 +1,12 @@
 import com.java.components.lang.CharArrayBuilder;
-import com.java.components.utils.BigNumeric;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 	public static void main(String[] args) {
-		CharArrayBuilder charArrayBuilder = new CharArrayBuilder();
-		charArrayBuilder.append(157.157);
-		System.out.println(charArrayBuilder);
+		System.out.println("Welcome to Java Components");
+		System.out.println();
+		System.out.println("Created by: MDDT (GHMMDDT)");
 	}
 }

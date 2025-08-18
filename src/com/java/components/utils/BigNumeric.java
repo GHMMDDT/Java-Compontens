@@ -1,12 +1,10 @@
 package com.java.components.utils;
 
-// Creating for NoobHack & AOtherSimpleUser:
+// Created by: NoobHack & AOtherSimpleUser:
 public class BigNumeric {
 	private StringBuilder numeric = new StringBuilder();
 
-	public BigNumeric(
-			String num
-	) {
+	public BigNumeric(String num) {
 		for (char c : num.toCharArray()) {
 			if (!(c >= '0' && c <= '9')) {
 				throw new IllegalArgumentException("The character of you numeric-string contains a: " + c + " is not valid");
@@ -16,9 +14,7 @@ public class BigNumeric {
 		numeric.append(num);
 	}
 
-	public BigNumeric addition(
-			String numeric
-	) {
+	public BigNumeric addition(String numeric) {
 		int i = this.numeric.length() - 1;
 		int j = numeric.length() - 1;
 		int carry = 0;
@@ -42,9 +38,7 @@ public class BigNumeric {
 		return this;
 	}
 
-	public BigNumeric subtract(
-			String numeric
-	) {
+	public BigNumeric subtract(String numeric) {
 		int i = this.numeric.length() - 1;
 		int j = numeric.length() - 1;
 
@@ -78,9 +72,7 @@ public class BigNumeric {
 		return this;
 	}
 
-	public BigNumeric multiplication(
-			String second
-	) {
+	public BigNumeric multiplication(String second) {
 		String num1 = this.numeric.toString();
 
 		String result = "0";
@@ -115,10 +107,7 @@ public class BigNumeric {
 		return this;
 	}
 
-	private String addStrings(
-			String a,
-			String b
-	) {
+	private String addStrings(String a, String b) {
 		int i = a.length() - 1;
 		int j = b.length() - 1;
 		int carry = 0;
