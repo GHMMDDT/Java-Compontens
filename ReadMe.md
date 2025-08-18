@@ -1,4 +1,4 @@
-<h1 style="text-align: center">Welcome to Java Components</h1>
+# Welcome to **Java Components**
 
 Este repositorio fue creado para que puedar tener algunas opciones extras que el Java nativo no tiene.
 
