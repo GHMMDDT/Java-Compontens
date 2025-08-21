@@ -1,9 +1,7 @@
 package com.java.components.lang;
 
-import java.util.Arrays;
-
 /*
- * Created by: ASimplerUser, TheCreator & AOtherUser
+ * Created by: ASimplerUser, ByUser, TheCreator & AOtherUser
  */
 public class CharArrayBuilder {
 	// -------------------- Field : Started -------------------- \\
@@ -11,8 +9,6 @@ public class CharArrayBuilder {
 	private char[] buffer;
 	private int size;
 
-	private OnAppendedChangedListener onAppendedChangedListener;
-	private OnAppendedListener onAppendedListener;
 	private OnAppendedWatcherListener onAppendedWatcherListener;
 
 	// -------------------- Field : Ended -------------------- \\
@@ -29,6 +25,8 @@ public class CharArrayBuilder {
 		this.buffer = new char[target.length - offset + preCapacity];
 
 		System.arraycopy(target, offset, this.buffer, 0, target.length - offset);
+
+		this.size = this.buffer.length;
 	}
 
 	public CharArrayBuilder(
@@ -38,19 +36,29 @@ public class CharArrayBuilder {
 		this.buffer = new char[target.length - offset];
 
 		System.arraycopy(target, offset, this.buffer, 0, this.buffer.length);
+
+		this.size = this.buffer.length;
 	}
 
-	public CharArrayBuilder(
-			char[] target
-	) {
+	public CharArrayBuilder(char[] target) {
 		this.buffer = new char[target.length];
 
 		System.arraycopy(target, 0, this.buffer, 0, this.buffer.length);
+
+		this.size = this.buffer.length;
 	}
 
-	public CharArrayBuilder(
-			int preCapacity
-	) {
+	public CharArrayBuilder(String target) {
+		char[] subTarget = target.toCharArray();
+
+		this.buffer = new char[subTarget.length];
+
+		System.arraycopy(subTarget, 0, this.buffer, 0, this.buffer.length);
+
+		this.size = this.buffer.length;
+	}
+
+	public CharArrayBuilder(int preCapacity) {
 		this.buffer = new char[preCapacity];
 	}
 
@@ -67,99 +75,293 @@ public class CharArrayBuilder {
 
 		char[] newBuffer;
 		if (this.size + text.length >= this.buffer.length) {
-			newBuffer = new char[Math.max(buffer.length * 2, size + text.length)];
+			newBuffer = new char[Math.max((int) (buffer.length * 1.75), size + text.length)];
 		} else {
 			newBuffer = new char[this.buffer.length];
 		}
 		System.arraycopy(this.buffer, 0, newBuffer, 0, this.size);
 		System.arraycopy(text, 0, newBuffer, this.size, text.length);
 
-		if (onAppendedChangedListener != null) {
-			if (!onAppendedChangedListener.onAppendedChanged(this.buffer, this.size, newBuffer, this.size + newBuffer.length, text)) {
-				return this;
-			}
-		}
-
-		if (onAppendedListener != null) {
-			char[] target = onAppendedListener.onAppended(this.buffer, this.size, newBuffer, this.size + newBuffer.length, text);
-
-			if (target != null) {
-				newBuffer = target;
-			}
-		}
-
 		if (onAppendedWatcherListener != null) {
 			onAppendedWatcherListener.onAppendedWatcher(this.buffer, this.size, newBuffer, this.size + newBuffer.length, text);
 		}
 
 		this.buffer = newBuffer;
-		this.size = newBuffer.length;
+		this.size += text.length;
+
+		return this;
+	}
+
+	public CharArrayBuilder append(char text) {
+		char[] newBuffer;
+		if (this.size + 1 >= this.buffer.length) {
+			newBuffer = new char[Math.max((int) (buffer.length * 1.75), size + 1)];
+		} else {
+			newBuffer = new char[this.buffer.length];
+		}
+		System.arraycopy(this.buffer, 0, newBuffer, 0, this.size);
+		newBuffer[this.size] = text;
+
+		if (onAppendedWatcherListener != null) {
+			onAppendedWatcherListener.onAppendedWatcher(this.buffer, this.size, newBuffer, this.size + newBuffer.length, new char[] { text });
+		}
+
+		this.buffer = newBuffer;
+		this.size += 1;
 
 		return this;
 	}
 
 	public CharArrayBuilder append(String text) {
+		if (text == null || text.isEmpty()) return this;
+
 		char[] subText = text.toCharArray();
-		if (subText == null || subText.length == 0) return this;
 
 		char[] newBuffer;
 		if (this.size + subText.length >= this.buffer.length) {
-			newBuffer = new char[Math.max(buffer.length * 2, size + subText.length)];
+			newBuffer = new char[Math.max((int) (buffer.length * 1.75), size + subText.length)];
 		} else {
 			newBuffer = new char[this.buffer.length];
 		}
 		System.arraycopy(this.buffer, 0, newBuffer, 0, this.size);
 		System.arraycopy(subText, 0, newBuffer, this.size, subText.length);
 
-		if (onAppendedChangedListener != null) {
-			if (!onAppendedChangedListener.onAppendedChanged(this.buffer, this.size, newBuffer, this.size + newBuffer.length, subText)) {
-				return this;
-			}
+		if (onAppendedWatcherListener != null) {
+			onAppendedWatcherListener.onAppendedWatcher(this.buffer, this.size, newBuffer, this.size + newBuffer.length, subText);
 		}
 
-		if (onAppendedListener != null) {
-			char[] target = onAppendedListener.onAppended(this.buffer, this.size, newBuffer, this.size + newBuffer.length, subText);
+		this.buffer = newBuffer;
+		this.size += text.length();
 
-			if (target != null) {
-				newBuffer = target;
-			}
+		return this;
+	}
+
+	public CharArrayBuilder append(boolean text) {
+		char[] newBuffer;
+		char[] subText = text ? new char[] { 't', 'r', 'u', 'e' } : new char[] { 'f', 'a', 'l', 's', 'e' };
+		if (this.size + subText.length >= this.buffer.length) {
+			newBuffer = new char[Math.max((int) (buffer.length * 1.75), size + subText.length)];
+		} else {
+			newBuffer = new char[this.buffer.length];
 		}
+		System.arraycopy(this.buffer, 0, newBuffer, 0, this.size);
+		System.arraycopy(subText, 0, newBuffer, this.size, subText.length);
 
 		if (onAppendedWatcherListener != null) {
 			onAppendedWatcherListener.onAppendedWatcher(this.buffer, this.size, newBuffer, this.size + newBuffer.length, subText);
 		}
 
 		this.buffer = newBuffer;
-		this.size = newBuffer.length;
+		this.size += subText.length;
 
 		return this;
 	}
 
-	public CharArrayBuilder setOnAppendedChangedListener(OnAppendedChangedListener onAppendedChangedListener) {
-		this.onAppendedChangedListener = onAppendedChangedListener;
+	public CharArrayBuilder append(Number text) {
+		char[] preText = String.valueOf(text).toCharArray();
+
+		char[] newBuffer;
+		if (this.size + preText.length >= this.buffer.length) {
+			newBuffer = new char[Math.max((int) (buffer.length * 1.75), size + preText.length)];
+		} else {
+			newBuffer = new char[this.buffer.length];
+		}
+		System.arraycopy(this.buffer, 0, newBuffer, 0, this.size);
+		System.arraycopy(preText, 0, newBuffer, this.size, preText.length);
+
+		if (onAppendedWatcherListener != null) {
+			onAppendedWatcherListener.onAppendedWatcher(this.buffer, this.size, newBuffer, this.size + newBuffer.length, preText);
+		}
+
+		this.buffer = newBuffer;
+		this.size += preText.length;
+
 		return this;
 	}
 
-	public OnAppendedChangedListener getOnAppendedChangedListener() {
-		return onAppendedChangedListener;
-	}
-
-	public CharArrayBuilder setOnAppendedListener(OnAppendedListener onAppendedListener) {
-		this.onAppendedListener = onAppendedListener;
-		return this;
-	}
-
-	public OnAppendedListener getOnAppendedListener() {
-		return onAppendedListener;
-	}
-
-	public CharArrayBuilder setOnAppendedWatcherListener(OnAppendedWatcherListener onAppendedWatcherListener) {
+	public CharArrayBuilder setOnAppendedWatcherListener(
+			OnAppendedWatcherListener onAppendedWatcherListener
+	) {
 		this.onAppendedWatcherListener = onAppendedWatcherListener;
 		return this;
 	}
 
 	public OnAppendedWatcherListener getOnAppendedWatcherListener() {
-		return onAppendedWatcherListener;
+		return this.onAppendedWatcherListener;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, int offset, OnReplacementListener replacement, int count, int start, int end) {
+		int counter = 1;
+		for (; start < end; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (offset == 0) {
+					if (count != 0) {
+						this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+						counter++;
+						count--;
+						continue;
+					}
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public int[] indexOfAll(OnIndexListener target, int start, int end) {
+		int[] preIndex = new int[8];
+		int index = 0;
+
+		for (;start < end; start++) {
+			if (target.onIndex(this.buffer[start])) {
+				if (index >= preIndex.length) {
+					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
+					preIndex = newPreIndex;
+				}
+				preIndex[index] = start;
+				index++;
+			}
+		}
+
+		int[] newPreIndex = new int[index];
+		System.arraycopy(preIndex, 0, newPreIndex, 0, index);
+
+		return newPreIndex;
+	}
+
+	public int[] indexOfAll(OnIndexListener target, int end) {
+		int[] preIndex = new int[8];
+		int index = 0;
+
+		for (int start = 0; start < end; start++) {
+			if (target.onIndex(this.buffer[start])) {
+				if (index >= preIndex.length) {
+					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
+					preIndex = newPreIndex;
+				}
+				preIndex[index] = start;
+				index++;
+			}
+		}
+
+		int[] newPreIndex = new int[index];
+		System.arraycopy(preIndex, 0, newPreIndex, 0, index);
+
+		return newPreIndex;
+	}
+
+	public int[] indexOfAll(OnIndexListener target) {
+		int[] preIndex = new int[8];
+		int index = 0;
+		int resizeCount = 0;
+		int moreSpace;
+
+		for (int start = 0; start < this.size; start++) {
+			if (target.onIndex(this.buffer[start])) {
+				if (index >= preIndex.length) {
+					moreSpace = resizeCount >= 15 ? preIndex.length * 7 / 2 :
+									resizeCount >= 35 ? preIndex.length * 8 :
+									resizeCount >= 75 ? preIndex.length * 25 :
+									preIndex.length * 7 / 4;
+					int[] newPreIndex = new int[moreSpace];
+					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
+					preIndex = newPreIndex;
+					resizeCount++;
+				}
+				preIndex[index] = start;
+				index++;
+			}
+		}
+
+		int[] newPreIndex = new int[index];
+		System.arraycopy(preIndex, 0, newPreIndex, 0, index);
+
+		return newPreIndex;
+	}
+
+	public int[] indexOfAll(char target, int start, int end) {
+		int[] preIndex = new int[8];
+		int index = 0;
+
+		for (;start < end; start++) {
+			if (target == this.buffer[start]) {
+				if (index >= preIndex.length) {
+					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
+					preIndex = newPreIndex;
+				}
+				preIndex[index] = start;
+				index++;
+			}
+		}
+
+		int[] newPreIndex = new int[index];
+		System.arraycopy(preIndex, 0, newPreIndex, 0, index);
+
+		return newPreIndex;
+	}
+
+	public int[] indexOfAll(char target, int end) {
+		int[] preIndex = new int[8];
+		int index = 0;
+
+		for (int start = 0; start < end; start++) {
+			if (target == this.buffer[start]) {
+				if (index >= preIndex.length) {
+					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
+					preIndex = newPreIndex;
+				}
+				preIndex[index] = start;
+				index++;
+			}
+		}
+
+		int[] newPreIndex = new int[index];
+		System.arraycopy(preIndex, 0, newPreIndex, 0, index);
+
+		return newPreIndex;
+	}
+
+	public int[] indexOfAll(char target) {
+		int[] preIndex = new int[8];
+		int index = 0;
+
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				if (index >= preIndex.length) {
+					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
+					preIndex = newPreIndex;
+				}
+				preIndex[index] = start;
+				index++;
+			}
+		}
+
+		int[] newPreIndex = new int[index];
+		System.arraycopy(preIndex, 0, newPreIndex, 0, index);
+
+		return newPreIndex;
+	}
+
+	public CharArrayBuilder deleteCharacterAt(int index) {
+		this.buffer[index] = '\0'; // de quita la letra, pero no se remueve
+		return this;
+	}
+
+	public char getCharacterAt(int index) {
+		return this.buffer[index];
+	}
+
+	public int getSize() {
+		return this.size;
+	}
+
+	public int getLength() {
+		return this.buffer.length;
 	}
 
 	@Override
@@ -171,16 +373,20 @@ public class CharArrayBuilder {
 
 	// -------------------- Class : Start -------------------- \\
 
-	public static abstract class OnAppendedChangedListener {
-		public abstract boolean onAppendedChanged(char[] old, int oldSize, char[] current, int currentSize, char[] insert);
-	}
-
-	public static abstract class OnAppendedListener {
-		public abstract char[] onAppended(char[] old, int oldSize, char[] current, int currentSize, char[] insert);
-	}
-
 	public static abstract class OnAppendedWatcherListener {
 		public abstract void onAppendedWatcher(char[] old, int oldSize, char[] current, int currentSize, char[] insert);
+	}
+
+	public static abstract class OnReplacementListener {
+		public abstract char onReplacement(char target, int count);
+	}
+
+	public static abstract class OnTargetListener {
+		public abstract boolean onTarget(char current);
+	}
+
+	public static abstract class OnIndexListener {
+		public abstract boolean onIndex(char current);
 	}
 
 	// -------------------- Class : Ended -------------------- \\

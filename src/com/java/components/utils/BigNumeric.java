@@ -1,10 +1,13 @@
 package com.java.components.utils;
 
-// Created by: NoobHack & AOtherSimpleUser:
-public class BigNumeric {
-	private StringBuilder numeric = new StringBuilder();
+import com.java.components.lang.CharArrayBuilder;
 
-	public BigNumeric(String num) {
+// Created by: NoobHack, Baconman & AOtherSimpleUser:
+public class BigNumeric {
+	private CharArrayBuilder numeric = new CharArrayBuilder();
+
+	// Disable for this moments.
+	/*public BigNumeric(String num) {
 		for (char c : num.toCharArray()) {
 			if (!(c >= '0' && c <= '9')) {
 				throw new IllegalArgumentException("The character of you numeric-string contains a: " + c + " is not valid");
@@ -15,15 +18,22 @@ public class BigNumeric {
 	}
 
 	public BigNumeric addition(String numeric) {
-		int i = this.numeric.length() - 1;
+		char[] target = numeric.toCharArray();
+		for (char c : target) {
+			if (!(c >= '0' && c <= '9')) {
+				throw new IllegalArgumentException("The character of you numeric-string contains a: " + c + " is not valid");
+			}
+		}
+
+		int i = this.numeric.getSize() - 1;
 		int j = numeric.length() - 1;
 		int carry = 0;
 
-		StringBuilder sb = new StringBuilder();
+		CharArrayBuilder sb = new CharArrayBuilder();
 
 		while (i >= 0 || j >= 0 || carry > 0) {
-			int digit1 = (i >= 0) ? this.numeric.charAt(i) - '0' : 0;
-			int digit2 = (j >= 0) ? numeric.charAt(j) - '0' : 0;
+			int digit1 = (i >= 0) ? this.numeric.getCharacterAt(i) - '0' : 0;
+			int digit2 = (j >= 0) ? target[j] - '0' : 0;
 
 			int sum = digit1 + digit2 + carry;
 			carry = sum / 10;
@@ -39,15 +49,22 @@ public class BigNumeric {
 	}
 
 	public BigNumeric subtract(String numeric) {
-		int i = this.numeric.length() - 1;
-		int j = numeric.length() - 1;
+		char[] target = numeric.toCharArray();
+		for (char c : target) {
+			if (!(c >= '0' && c <= '9')) {
+				throw new IllegalArgumentException("The character of you numeric-string contains a: " + c + " is not valid");
+			}
+		}
 
-		StringBuilder sb = new StringBuilder();
+		int i = this.numeric.getLength() - 1;
+		int j = target.length - 1;
+
+		CharArrayBuilder sb = new CharArrayBuilder();
 		int borrow = 0;
 
 		while (i >= 0 || j >= 0) {
-			int digit1 = (i >= 0) ? this.numeric.charAt(i) - '0' : 0;
-			int digit2 = (j >= 0) ? numeric.charAt(j) - '0' : 0;
+			int digit1 = (i >= 0) ? this.numeric.getCharacterAt(i) - '0' : 0;
+			int digit2 = (j >= 0) ? target[j] - '0' : 0;
 
 			digit1 -= borrow;
 			borrow = 0;
@@ -64,22 +81,29 @@ public class BigNumeric {
 			j--;
 		}
 
-		while (sb.length() > 1 && sb.charAt(sb.length() - 1) == '0') {
-			sb.deleteCharAt(sb.length() - 1);
+		while (sb.getSize() > 1 && sb.getCharacterAt(sb.getSize() - 1) == '0') {
+			sb.deleteCharacterAt(sb.getSize() - 1);
 		}
 
 		this.numeric = sb.reverse();
 		return this;
 	}
 
-	public BigNumeric multiplication(String second) {
+	public BigNumeric multiplication(String numeric) {
+		char[] target = numeric.toCharArray();
+		for (char c : target) {
+			if (!(c >= '0' && c <= '9')) {
+				throw new IllegalArgumentException("The character of you numeric-string contains a: " + c + " is not valid");
+			}
+		}
+
 		String num1 = this.numeric.toString();
 
 		String result = "0";
 
 		int zeros = 0;
-		for (int j = second.length() - 1 ; j >= 0; j--) {
-			int d2 = second.charAt(j) - '0';
+		for (int j = target.length - 1 ; j >= 0; j--) {
+			int d2 = target[j] - '0';
 			int carry = 0;
 
 			StringBuilder partial = new StringBuilder();
@@ -103,7 +127,7 @@ public class BigNumeric {
 			zeros++;
 		}
 
-		this.numeric = new StringBuilder(result);
+		this.numeric = new CharArrayBuilder(result);
 		return this;
 	}
 
@@ -111,7 +135,8 @@ public class BigNumeric {
 		int i = a.length() - 1;
 		int j = b.length() - 1;
 		int carry = 0;
-		StringBuilder sb = new StringBuilder();
+
+		CharArrayBuilder sb = new CharArrayBuilder();
 
 		while (i >= 0 || j >= 0 || carry > 0) {
 			int d1 = (i >= 0) ? a.charAt(i) - '0' : 0;
@@ -131,5 +156,5 @@ public class BigNumeric {
 	@Override
 	public String toString() {
 		return numeric.toString();
-	}
+	}*/
 }
