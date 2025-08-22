@@ -211,13 +211,20 @@ public class CharArrayBuilder {
 	public int[] indexOfAll(OnIndexListener target, int start, int end) {
 		int[] preIndex = new int[8];
 		int index = 0;
+		int resizeCount = 0;
+		int moreSpace;
 
 		for (;start < end; start++) {
 			if (target.onIndex(this.buffer[start])) {
 				if (index >= preIndex.length) {
-					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					moreSpace = resizeCount >= 15 ? preIndex.length * 7 / 2 :
+							resizeCount >= 35 ? preIndex.length * 8 :
+							resizeCount >= 75 ? preIndex.length * 25 :
+							preIndex.length * 7 / 4;
+					int[] newPreIndex = new int[moreSpace];
 					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
 					preIndex = newPreIndex;
+					resizeCount++;
 				}
 				preIndex[index] = start;
 				index++;
@@ -233,13 +240,20 @@ public class CharArrayBuilder {
 	public int[] indexOfAll(OnIndexListener target, int end) {
 		int[] preIndex = new int[8];
 		int index = 0;
+		int resizeCount = 0;
+		int moreSpace;
 
 		for (int start = 0; start < end; start++) {
 			if (target.onIndex(this.buffer[start])) {
 				if (index >= preIndex.length) {
-					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					moreSpace = resizeCount >= 15 ? preIndex.length * 7 / 2 :
+							resizeCount >= 35 ? preIndex.length * 8 :
+							resizeCount >= 75 ? preIndex.length * 25 :
+							preIndex.length * 7 / 4;
+					int[] newPreIndex = new int[moreSpace];
 					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
 					preIndex = newPreIndex;
+					resizeCount++;
 				}
 				preIndex[index] = start;
 				index++;
@@ -262,9 +276,9 @@ public class CharArrayBuilder {
 			if (target.onIndex(this.buffer[start])) {
 				if (index >= preIndex.length) {
 					moreSpace = resizeCount >= 15 ? preIndex.length * 7 / 2 :
-									resizeCount >= 35 ? preIndex.length * 8 :
-									resizeCount >= 75 ? preIndex.length * 25 :
-									preIndex.length * 7 / 4;
+							resizeCount >= 35 ? preIndex.length * 8 :
+							resizeCount >= 75 ? preIndex.length * 25 :
+							preIndex.length * 7 / 4;
 					int[] newPreIndex = new int[moreSpace];
 					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
 					preIndex = newPreIndex;
@@ -284,13 +298,20 @@ public class CharArrayBuilder {
 	public int[] indexOfAll(char target, int start, int end) {
 		int[] preIndex = new int[8];
 		int index = 0;
+		int resizeCount = 0;
+		int moreSpace;
 
 		for (;start < end; start++) {
 			if (target == this.buffer[start]) {
 				if (index >= preIndex.length) {
-					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					moreSpace = resizeCount >= 15 ? preIndex.length * 7 / 2 :
+							resizeCount >= 35 ? preIndex.length * 8 :
+							resizeCount >= 75 ? preIndex.length * 25 :
+							preIndex.length * 7 / 4;
+					int[] newPreIndex = new int[moreSpace];
 					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
 					preIndex = newPreIndex;
+					resizeCount++;
 				}
 				preIndex[index] = start;
 				index++;
@@ -306,13 +327,20 @@ public class CharArrayBuilder {
 	public int[] indexOfAll(char target, int end) {
 		int[] preIndex = new int[8];
 		int index = 0;
+		int resizeCount = 0;
+		int moreSpace;
 
 		for (int start = 0; start < end; start++) {
 			if (target == this.buffer[start]) {
 				if (index >= preIndex.length) {
-					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					moreSpace = resizeCount >= 15 ? preIndex.length * 7 / 2 :
+							resizeCount >= 35 ? preIndex.length * 8 :
+							resizeCount >= 75 ? preIndex.length * 25 :
+							preIndex.length * 7 / 4;
+					int[] newPreIndex = new int[moreSpace];
 					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
 					preIndex = newPreIndex;
+					resizeCount++;
 				}
 				preIndex[index] = start;
 				index++;
@@ -328,13 +356,20 @@ public class CharArrayBuilder {
 	public int[] indexOfAll(char target) {
 		int[] preIndex = new int[8];
 		int index = 0;
+		int resizeCount = 0;
+		int moreSpace;
 
 		for (int start = 0; start < this.size; start++) {
 			if (target == this.buffer[start]) {
 				if (index >= preIndex.length) {
-					int[] newPreIndex = new int[(int) (preIndex.length * 1.75)];
+					moreSpace = resizeCount >= 15 ? preIndex.length * 7 / 2 :
+							resizeCount >= 35 ? preIndex.length * 8 :
+							resizeCount >= 75 ? preIndex.length * 25 :
+							preIndex.length * 7 / 4;
+					int[] newPreIndex = new int[moreSpace];
 					System.arraycopy(preIndex, 0, newPreIndex, 0, preIndex.length);
 					preIndex = newPreIndex;
+					resizeCount++;
 				}
 				preIndex[index] = start;
 				index++;
@@ -345,6 +380,60 @@ public class CharArrayBuilder {
 		System.arraycopy(preIndex, 0, newPreIndex, 0, index);
 
 		return newPreIndex;
+	}
+
+	public int indexOf(OnIndexListener target, int start, int end) {
+		for (;start < end; start++) {
+			if (target.onIndex(this.buffer[start])) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOf(OnIndexListener target, int end) {
+		for (int start = 0; start < end; start++) {
+			if (target.onIndex(this.buffer[start])) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOf(OnIndexListener target) {
+		for (int start = 0; start < this.size; start++) {
+			if (target.onIndex(this.buffer[start])) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOf(char target, int start, int end) {
+		for (;start < end; start++) {
+			if (target == this.buffer[start]) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOf(char target, int end) {
+		for (int start = 0; start < end; start++) {
+			if (target == this.buffer[start]) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOf(char target) {
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				return start;
+			}
+		}
+		return -1;
 	}
 
 	public CharArrayBuilder deleteCharacterAt(int index) {
