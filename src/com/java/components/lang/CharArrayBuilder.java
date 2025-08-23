@@ -752,7 +752,7 @@ public class CharArrayBuilder {
 		return newPreIndex;
 	}
 
-	public int indexOf(OnIndexListener target, int start, int end) {
+	public int indexOfFirst(OnIndexListener target, int start, int end) {
 		for (;start < end; start++) {
 			if (target.onIndex(this.buffer[start])) {
 				return start;
@@ -761,7 +761,7 @@ public class CharArrayBuilder {
 		return -1;
 	}
 
-	public int indexOf(OnIndexListener target, int end) {
+	public int indexOfFirst(OnIndexListener target, int end) {
 		for (int start = 0; start < end; start++) {
 			if (target.onIndex(this.buffer[start])) {
 				return start;
@@ -770,7 +770,7 @@ public class CharArrayBuilder {
 		return -1;
 	}
 
-	public int indexOf(OnIndexListener target) {
+	public int indexOfFirst(OnIndexListener target) {
 		for (int start = 0; start < this.size; start++) {
 			if (target.onIndex(this.buffer[start])) {
 				return start;
@@ -779,7 +779,7 @@ public class CharArrayBuilder {
 		return -1;
 	}
 
-	public int indexOf(char target, int start, int end) {
+	public int indexOfFirst(char target, int start, int end) {
 		for (;start < end; start++) {
 			if (target == this.buffer[start]) {
 				return start;
@@ -788,7 +788,7 @@ public class CharArrayBuilder {
 		return -1;
 	}
 
-	public int indexOf(char target, int end) {
+	public int indexOfFirst(char target, int end) {
 		for (int start = 0; start < end; start++) {
 			if (target == this.buffer[start]) {
 				return start;
@@ -797,8 +797,79 @@ public class CharArrayBuilder {
 		return -1;
 	}
 
-	public int indexOf(char target) {
+	public int indexOfFirst(char target) {
 		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOfLast(OnIndexListener target, int start, int end) {
+		start = (this.size - start) - 1;
+		int tmp = end == 0 ? 0 : (end - this.size);
+		end = tmp >= 0 ? tmp : -tmp;
+		for (;start > end; start--) {
+			if (target.onIndex(this.buffer[start])) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOfLast(OnIndexListener target, int end) {
+		int start = this.size - 1;
+		int tmp = end == 0 ? 0 : (end - this.size);
+		end = tmp >= 0 ? tmp : -tmp;
+		for (;start > end; start--) {
+			if (target.onIndex(this.buffer[start])) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOfLast(OnIndexListener target) {
+		int start = this.size - 1;
+		int end = 0;
+		for (;start > end; start--) {
+			if (target.onIndex(this.buffer[start])) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOfLast(char target, int start, int end) {
+		start = (this.size - start) - 1;
+		System.out.println(start + ": start");
+		int tmp = end == 0 ? 0 : (end - this.size);
+		end = tmp >= 0 ? tmp : -tmp;
+		for (;start > end; start--) {
+			if (target == this.buffer[start]) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOfLast(char target, int end) {
+		int start = this.size - 1;
+		int tmp = end == 0 ? 0 : (end - this.size);
+		end = tmp >= 0 ? tmp : -tmp;
+		for (;start > end; start--) {
+			if (target == this.buffer[start]) {
+				return start;
+			}
+		}
+		return -1;
+	}
+
+	public int indexOfLast(char target) {
+		int start = this.size - 1;
+		int end = 0;
+		for (;start > end; start--) {
 			if (target == this.buffer[start]) {
 				return start;
 			}
