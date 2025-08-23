@@ -294,8 +294,6 @@ public class CharArrayBuilder {
 		return this;
 	}
 
-	// A replace
-
 	public CharArrayBuilder replace(char target, int offset, OnReplacementListener replacement, int count, int start, int end) {
 		int counter = 1;
 		for (; start < end; start++) {
@@ -398,8 +396,6 @@ public class CharArrayBuilder {
 		return this;
 	}
 
-	// B Replace:
-
 	public CharArrayBuilder replace(OnTargetListener target, int offset, char replacement, int count, int start, int end) {
 		for (; start < end; start++) {
 			if (target.onTarget(this.buffer[start])) {
@@ -487,8 +483,6 @@ public class CharArrayBuilder {
 		}
 		return this;
 	}
-
-	// C Replace:
 
 	public CharArrayBuilder replace(char target, int offset, char replacement, int count, int start, int end) {
 		for (; start < end; start++) {
@@ -962,4 +956,13 @@ public class CharArrayBuilder {
 	}
 
 	// -------------------- Class : Ended -------------------- \\
+
+	// -------------------- Enum : Start -------------------- \\
+
+	public  enum ReplaceDirectionType {
+		StartToEnd,
+		EndToStart;
+	}
+
+	// -------------------- Enum : Ended -------------------- \\
 }
