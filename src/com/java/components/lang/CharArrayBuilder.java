@@ -192,8 +192,9 @@ public class CharArrayBuilder {
 		return this.onAppendedWatcherListener;
 	}
 
-	public CharArrayBuilder replace(OnTargetListener target, int offset, OnReplacementListener replacement, int count, int start, int end) {
+	public CharArrayBuilder replace(OnTargetListener target, int offset, OnReplacementListener replacement, int count, int start, int end, ReplaceDirectionType direction) {
 		int counter = 1;
+
 		for (; start < end; start++) {
 			if (target.onTarget(this.buffer[start])) {
 				if (offset == 0) {
