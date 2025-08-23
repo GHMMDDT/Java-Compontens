@@ -1,5 +1,7 @@
 package com.java.components.lang;
 
+import java.awt.*;
+
 /*
  * Created by: ASimplerUser, ByUser, TheCreator & AOtherUser
  */
@@ -203,6 +205,374 @@ public class CharArrayBuilder {
 					}
 				}
 				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, int offset, OnReplacementListener replacement, int start, int end) {
+		int counter = 1;
+		for (; start < end; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (offset == 0) {
+					this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+					counter++;
+					continue;
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, OnReplacementListener replacement, int start, int end) {
+		int counter = 1;
+		for (; start < end; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+				counter++;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, int offset, OnReplacementListener replacement, int count) {
+		int counter = 1;
+		for (int start = 0; start < this.size; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (offset == 0) {
+					if (count != 0) {
+						this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+						counter++;
+						count--;
+						continue;
+					}
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, int offset, OnReplacementListener replacement) {
+		int counter = 1;
+		for (int start = 0; start < this.size; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (offset == 0) {
+					this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+					counter++;
+					continue;
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, OnReplacementListener replacement, int count) {
+		int counter = 1;
+		for (int start = 0; start < this.size; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (count != 0) {
+					this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+					counter++;
+					count--;
+				}
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, OnReplacementListener replacement) {
+		int counter = 1;
+		for (int start = 0; start < this.size; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+				counter++;
+			}
+		}
+		return this;
+	}
+
+	// A replace
+
+	public CharArrayBuilder replace(char target, int offset, OnReplacementListener replacement, int count, int start, int end) {
+		int counter = 1;
+		for (; start < end; start++) {
+			if (target == this.buffer[start]) {
+				if (offset == 0) {
+					if (count != 0) {
+						this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+						counter++;
+						count--;
+						continue;
+					}
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, int offset, OnReplacementListener replacement, int start, int end) {
+		int counter = 1;
+		for (; start < end; start++) {
+			if (target == this.buffer[start]) {
+				if (offset == 0) {
+					this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+					counter++;
+					continue;
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, OnReplacementListener replacement, int start, int end) {
+		int counter = 1;
+		for (; start < end; start++) {
+			if (target == this.buffer[start]) {
+				this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+				counter++;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, int offset, OnReplacementListener replacement, int count) {
+		int counter = 1;
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				if (offset == 0) {
+					if (count != 0) {
+						this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+						counter++;
+						count--;
+						continue;
+					}
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, int offset, OnReplacementListener replacement) {
+		int counter = 1;
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				if (offset == 0) {
+					this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+					counter++;
+					continue;
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, OnReplacementListener replacement, int count) {
+		int counter = 1;
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				if (count != 0) {
+					this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+					counter++;
+					count--;
+				}
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, OnReplacementListener replacement) {
+		int counter = 1;
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				this.buffer[start] = replacement.onReplacement(this.buffer[start], counter);
+				counter++;
+			}
+		}
+		return this;
+	}
+
+	// B Replace:
+
+	public CharArrayBuilder replace(OnTargetListener target, int offset, char replacement, int count, int start, int end) {
+		for (; start < end; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (offset == 0) {
+					if (count != 0) {
+						this.buffer[start] = replacement;
+						count--;
+						continue;
+					}
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, int offset, char replacement, int start, int end) {
+		for (; start < end; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (offset == 0) {
+					this.buffer[start] = replacement;
+					continue;
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, char replacement, int start, int end) {
+		for (; start < end; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				this.buffer[start] = replacement;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, int offset, char replacement, int count) {
+		for (int start = 0; start < this.size; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (offset == 0) {
+					if (count != 0) {
+						this.buffer[start] = replacement;
+						count--;
+						continue;
+					}
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, int offset, char replacement) {
+		for (int start = 0; start < this.size; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (offset == 0) {
+					this.buffer[start] = replacement;
+					continue;
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, char replacement, int count) {
+		for (int start = 0; start < this.size; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				if (count != 0) {
+					this.buffer[start] = replacement;
+					count--;
+				}
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(OnTargetListener target, char replacement) {
+		for (int start = 0; start < this.size; start++) {
+			if (target.onTarget(this.buffer[start])) {
+				this.buffer[start] = replacement;
+			}
+		}
+		return this;
+	}
+
+	// C Replace:
+
+	public CharArrayBuilder replace(char target, int offset, char replacement, int count, int start, int end) {
+		for (; start < end; start++) {
+			if (target == this.buffer[start]) {
+				if (offset == 0) {
+					if (count != 0) {
+						this.buffer[start] = replacement;
+						count--;
+						continue;
+					}
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, int offset, char replacement, int start, int end) {
+		for (; start < end; start++) {
+			if (target == this.buffer[start]) {
+				if (offset == 0) {
+					this.buffer[start] = replacement;
+					continue;
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, char replacement, int start, int end) {
+		for (; start < end; start++) {
+			if (target == this.buffer[start]) {
+				this.buffer[start] = replacement;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, int offset, char replacement, int count) {
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				if (offset == 0) {
+					if (count != 0) {
+						this.buffer[start] = replacement;
+						count--;
+						continue;
+					}
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, int offset, char replacement) {
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				if (offset == 0) {
+					this.buffer[start] = replacement;
+					continue;
+				}
+				offset--;
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, char replacement, int count) {
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				if (count != 0) {
+					this.buffer[start] = replacement;
+					count--;
+				}
+			}
+		}
+		return this;
+	}
+
+	public CharArrayBuilder replace(char target, char replacement) {
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				this.buffer[start] = replacement;
 			}
 		}
 		return this;
@@ -436,6 +806,40 @@ public class CharArrayBuilder {
 		return -1;
 	}
 
+	public boolean contains(OnContainsListener target) {
+		for (int start = 0; start < this.size; start++) {
+			if (target.onContains(this.buffer[start])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean contains(char target) {
+		for (int start = 0; start < this.size; start++) {
+			if (target == this.buffer[start]) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public CharArrayBuilder repeat(int count) {
+		char[] target = new char[this.size * count];
+		int oldSize = 0;
+		int realSize = this.size;
+
+		for (int i = 0; i < count; i++) {
+			System.arraycopy(this.buffer, 0, target, oldSize, realSize);
+			oldSize += this.size;
+		}
+
+		this.buffer = target;
+		this.size = this.size * count;
+
+		return this;
+	}
+
 	public CharArrayBuilder deleteCharacterAt(int index) {
 		this.buffer[index] = '\0'; // de quita la letra, pero no se remueve
 		return this;
@@ -451,6 +855,10 @@ public class CharArrayBuilder {
 
 	public int getLength() {
 		return this.buffer.length;
+	}
+
+	public char[] getBuffer() {
+		return this.buffer;
 	}
 
 	@Override
@@ -476,6 +884,10 @@ public class CharArrayBuilder {
 
 	public static abstract class OnIndexListener {
 		public abstract boolean onIndex(char current);
+	}
+
+	public static abstract class OnContainsListener {
+		public abstract boolean onContains(char current);
 	}
 
 	// -------------------- Class : Ended -------------------- \\

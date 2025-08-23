@@ -1,13 +1,10 @@
 package com.java.components.utils;
 
-import com.java.components.lang.CharArrayBuilder;
-
 // Created by: NoobHack, Baconman & AOtherSimpleUser:
 public class BigNumeric {
-	private CharArrayBuilder numeric = new CharArrayBuilder();
+	private StringBuilder numeric = new StringBuilder();
 
-	// Disable for this moments.
-	/*public BigNumeric(String num) {
+	public BigNumeric(String num) {
 		for (char c : num.toCharArray()) {
 			if (!(c >= '0' && c <= '9')) {
 				throw new IllegalArgumentException("The character of you numeric-string contains a: " + c + " is not valid");
@@ -25,14 +22,14 @@ public class BigNumeric {
 			}
 		}
 
-		int i = this.numeric.getSize() - 1;
+		int i = this.numeric.length() - 1;
 		int j = numeric.length() - 1;
 		int carry = 0;
 
-		CharArrayBuilder sb = new CharArrayBuilder();
+		StringBuilder sb = new StringBuilder();
 
 		while (i >= 0 || j >= 0 || carry > 0) {
-			int digit1 = (i >= 0) ? this.numeric.getCharacterAt(i) - '0' : 0;
+			int digit1 = (i >= 0) ? this.numeric.charAt(i) - '0' : 0;
 			int digit2 = (j >= 0) ? target[j] - '0' : 0;
 
 			int sum = digit1 + digit2 + carry;
@@ -56,14 +53,14 @@ public class BigNumeric {
 			}
 		}
 
-		int i = this.numeric.getLength() - 1;
+		int i = this.numeric.length() - 1;
 		int j = target.length - 1;
 
-		CharArrayBuilder sb = new CharArrayBuilder();
+		StringBuilder sb = new StringBuilder();
 		int borrow = 0;
 
 		while (i >= 0 || j >= 0) {
-			int digit1 = (i >= 0) ? this.numeric.getCharacterAt(i) - '0' : 0;
+			int digit1 = (i >= 0) ? this.numeric.charAt(i) - '0' : 0;
 			int digit2 = (j >= 0) ? target[j] - '0' : 0;
 
 			digit1 -= borrow;
@@ -81,8 +78,8 @@ public class BigNumeric {
 			j--;
 		}
 
-		while (sb.getSize() > 1 && sb.getCharacterAt(sb.getSize() - 1) == '0') {
-			sb.deleteCharacterAt(sb.getSize() - 1);
+		while (sb.length() > 1 && sb.charAt(sb.length() - 1) == '0') {
+			sb.deleteCharAt(sb.length() - 1);
 		}
 
 		this.numeric = sb.reverse();
@@ -127,7 +124,7 @@ public class BigNumeric {
 			zeros++;
 		}
 
-		this.numeric = new CharArrayBuilder(result);
+		this.numeric = new StringBuilder(result);
 		return this;
 	}
 
@@ -136,7 +133,7 @@ public class BigNumeric {
 		int j = b.length() - 1;
 		int carry = 0;
 
-		CharArrayBuilder sb = new CharArrayBuilder();
+		StringBuilder sb = new StringBuilder();
 
 		while (i >= 0 || j >= 0 || carry > 0) {
 			int d1 = (i >= 0) ? a.charAt(i) - '0' : 0;
@@ -156,5 +153,5 @@ public class BigNumeric {
 	@Override
 	public String toString() {
 		return numeric.toString();
-	}*/
+	}
 }
