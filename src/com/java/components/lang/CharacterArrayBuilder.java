@@ -1,7 +1,5 @@
 package com.java.components.lang;
 
-import java.awt.desktop.SystemEventListener;
-
 /*
  * Created by: ASimplerUser, ByUser, TheCreator & AOtherUser
  */
